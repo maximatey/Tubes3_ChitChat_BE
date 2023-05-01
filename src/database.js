@@ -1,5 +1,8 @@
 // Note: Jika terdapat error saat membuat koneksi ke database, cek https://www.youtube.com/watch?v=W2TuIx2y4kw
 
+const searchBM = require('./BM.js').searchBM;
+// import { searchBM } from './BM.js'; // Jika terhubung ke frontend
+
 var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
@@ -43,7 +46,7 @@ function modifyDatabase(query) {
 /*
     fungsi untuk mencari jawaban dari pertanyaan pada database QnA
 */
-function findAnswer(question) {
+function getAnswer(question, algorithm) {
     // Load data from databases;
     let query = 'SELECT * FROM QnA';
     readDatabase(query)
@@ -51,6 +54,11 @@ function findAnswer(question) {
             let found = false;
             let i = 0;
             // Periksa apakah pertanyaan sudah ada di database dengan string matching
+            if (algorithm === "BM") {
+                // Menggunakan algoritma Boyer Moore
+
+            }
+
             // Sementara, kalau sudah ada BM atau KMP nanti diganti
             while (i < data.length && !found) {
                 if (data[i].question === question) {
@@ -108,7 +116,7 @@ function addQnA(question, answer) {
                 if (data.length === 0) {
                     id = 10000000;
                 } else {
-                    id = data[data.length - 1].ID + 1;
+                    id = parseInt(data[data.length - 1].ID) + 1;
                 }
                 // Jika pertanyaan belum ada di database, maka tambahkan pertanyaan dan jawaban
                 query = `INSERT INTO QnA (ID, Question, Answer) VALUES ('${id}', '${question}', '${answer}')`;
@@ -170,7 +178,7 @@ function addChat(question, answer_ID, alternative_answer, hist_ID) {
             if (data.length === 0) {
                 chat_ID = 10000000;
             } else {
-                chat_ID = data[data.length - 1].chat_ID + 1;
+                chat_ID = parseInt(data[data.length - 1].chat_ID) + 1;
             }
 
             // Tambahkan chat baru ke database
@@ -194,7 +202,7 @@ function addHistory(title, date_created) {
             if (data.length === 0) {
                 hist_ID = 10000000;
             } else {
-                hist_ID = data[data.length - 1].hist_ID + 1;
+                hist_ID = parseInt(data[data.length - 1].hist_ID) + 1;
             }
 
             // Tambahkan history baru ke database
@@ -218,3 +226,6 @@ function updateLastModifiesHistory(hist_ID, last_modified) {
     let query = `UPDATE History SET last_modified = ${last_modified} WHERE hist_ID=${hist_ID}`;
     modifyDatabase(query);
 }
+
+// export { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory }
+module.exports = { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory }
