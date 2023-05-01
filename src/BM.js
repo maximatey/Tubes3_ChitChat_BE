@@ -3,11 +3,6 @@
 */
 let NO_OF_CHARS = 256;
 
-// Utility function untuk mendapatkan nilai minimum dari dua integer
-function min(a, b) {
-    return (a < b) ? a : b;
-}
-
 // Preprocessing function untuk bad character heuristic dengan melakukan mapping pada last occurence dari setiap karakter
 function mapLastOccurence(str, size, last) {
     // Inisialisasi semua nilai last occurence dengan -1
@@ -44,7 +39,7 @@ function searchBM(txt, pat) {
             }
         } else { // character jump technique
             let lo = last[txt.charCodeAt(i)];
-            i += m - min(j, 1 + lo);
+            i += m - Math.min(j, 1 + lo);
             j = m - 1;
         }
 
@@ -53,7 +48,6 @@ function searchBM(txt, pat) {
 }
 
 /* Driver program to test above function */
-// let txt = "a pattern matching algorithm";
-// let pat = "algorithm";
-// // searchBM(txt, pat);
-// console.log(searchBM(txt, pat));
+let txt = "a pattern matching algorithm";
+let pat = "algorithm";
+console.log(searchBM(txt, pat));
