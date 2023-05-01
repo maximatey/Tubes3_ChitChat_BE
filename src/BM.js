@@ -51,3 +51,6 @@ function searchBM(txt, pat) {
 let txt = "a pattern matching algorithm";
 let pat = "algorithm";
 console.log(searchBM(txt, pat));
+
+// export { searchBM };
+module.exports = { searchBM };

@@ -1,8 +1,8 @@
-function isValidExpression(expression) {  
+function isValidExpression(expression) {
     const stack = [];
     let decimalFound = false;
     let count = 0;
-  
+
     for (let i = 0; i < expression.length; i++) {
         const char = expression[i];
         if (char >= '0' && char <= '9') {
@@ -28,7 +28,7 @@ function isValidExpression(expression) {
             return false;
         }
     }
-  
+
     for (let i = 0; i < stack.length; i++) {
         if (stack[i] === '(') {
             count++;
@@ -53,10 +53,10 @@ function isValidExpression(expression) {
     }
     return true;
 }
-    
+
 function calculator(expression) {
     expression = expression.replace(/\s/g, '');
-    if (isValidExpression(expression)) {  
+    if (isValidExpression(expression)) {
         let tokens = expression.match(/(\d+(\.\d+)?)|([\+\-\*\/\^\(\)])/g);
         let numbers = [];
         let operators = [];
@@ -104,7 +104,7 @@ function calculator(expression) {
     }
 }
 
-    
+
 function hasPrecedence(operator1, operator2) {
     if (operator2 === '(' || operator2 === ')') {
         return false;
@@ -117,7 +117,7 @@ function hasPrecedence(operator1, operator2) {
     }
     return false;
 }
-    
+
 function evaluate(a, operator, b) {
     switch (operator) {
         case '+':
@@ -132,7 +132,7 @@ function evaluate(a, operator, b) {
             return Math.pow(a, b);
     }
 }
-    
+
 // console.log(calculator("2 + 3")); // true
 // console.log(calculator("2 * 3")); // true
 // console.log(calculator("10.5 / 5")); // true
@@ -152,3 +152,6 @@ function evaluate(a, operator, b) {
 // console.log(calculator("1 / 0")); // true
 // console.log(calculator("5 + 2 * 5")); // true
 // console.log(calculator("8 + 7 +2 + *5")); // true
+
+// export { calculator }; // Jika terhubung ke frontend
+module.exports = { calculator };

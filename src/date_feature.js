@@ -12,8 +12,8 @@ function checkDay(day, month, year) {
     if (day > maxDay) {
         return `Tanggal Invalid! Pada tahun ${year} bulan ${month} hanya memiliki ${maxDay} hari.`;
     }
-    
-    const date = new Date(year, month-1, day+1);
+
+    const date = new Date(year, month - 1, day + 1);
     const date_string = date.toISOString().slice(0, 10);
     console.log(date_string);
     return getDay(date_string);
@@ -26,4 +26,7 @@ function getDay(date_string) {
     return day;
 }
 
-console.log(checkDay(31, 4, 2023));
+// console.log(checkDay(30, 4, 2023));
+
+// export { checkDay };
+module.exports = { checkDay };

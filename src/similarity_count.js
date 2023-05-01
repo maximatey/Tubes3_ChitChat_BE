@@ -32,7 +32,10 @@ function levenshteinDistance(str1, str2) {
 
 
 // driver code
-let str1 = "kitten";
-let str2 = "sitting";
-let dist = (levenshteinDistance(str1, str2));
-console.log(dist);
+// let str1 = "kitten";
+// let str2 = "sitting";
+// let dist = (levenshteinDistance(str1, str2));
+// console.log(dist);
+
+// export { levenshteinDistance };
+module.exports = { levenshteinDistance };
