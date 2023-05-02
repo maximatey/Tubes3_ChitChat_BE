@@ -33,14 +33,11 @@ DROP TABLE IF EXISTS `chat`;
 CREATE TABLE `chat` (
   `chat_ID` char(8) NOT NULL,
   `question` varchar(4000) NOT NULL,
-  `answer_ID` char(8) DEFAULT NULL,
-  `alternative_answer` varchar(4000) DEFAULT NULL,
+  `answer` varchar(4000) NOT NULL,
   `hist_ID` char(8) NOT NULL,
   PRIMARY KEY (`chat_ID`),
-  KEY `answer_ID` (`answer_ID`),
   KEY `hist_ID` (`hist_ID`),
-  CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`answer_ID`) REFERENCES `qna` (`ID`),
-  CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`hist_ID`) REFERENCES `history` (`hist_ID`)
+  CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`hist_ID`) REFERENCES `history` (`hist_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,6 +47,7 @@ CREATE TABLE `chat` (
 
 LOCK TABLES `chat` WRITE;
 /*!40000 ALTER TABLE `chat` DISABLE KEYS */;
+INSERT INTO `chat` (`chat_ID`, `question`, `answer`, `hist_ID`) VALUES ('10000000','30/04/2023','Minggu','10000000'),('10000001','4+5','9','10000000'),('10000002','Tambah pertanyaan apa ibukota prancis? dengan jawaban paris','Pertanyaan apa ibukota prancis telah ditambahkan','10000000');
 /*!40000 ALTER TABLE `chat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -75,6 +73,7 @@ CREATE TABLE `history` (
 
 LOCK TABLES `history` WRITE;
 /*!40000 ALTER TABLE `history` DISABLE KEYS */;
+INSERT INTO `history` (`hist_ID`, `title`, `date_created`, `last_modified`) VALUES ('10000000','Ibukota Negara','2023-05-02 11:10:05','2023-05-02 11:13:52');
 /*!40000 ALTER TABLE `history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,6 +98,7 @@ CREATE TABLE `qna` (
 
 LOCK TABLES `qna` WRITE;
 /*!40000 ALTER TABLE `qna` DISABLE KEYS */;
+INSERT INTO `qna` (`ID`, `question`, `answer`) VALUES ('10000000','apa ibukota indonesia','jakarta'),('10000001','apa ibukota india','new delhi'),('10000003','apa ibukota inggris','london'),('10000004','apa ibukota prancis','paris');
 /*!40000 ALTER TABLE `qna` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -111,4 +111,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-24 15:47:57
+-- Dump completed on 2023-05-02 11:22:23
