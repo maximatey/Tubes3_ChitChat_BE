@@ -5,7 +5,7 @@ function classification(input) {
         return 2;
     } else if (/Tambah pertanyaan (.+) dengan jawaban (.+)/i.test(input)) {
         return 3;
-    } else if (/^Hapus pertanyaan (\w+)$/i.test(input)) {
+    } else if (/Hapus pertanyaan (.+)$/i.test(input)) {
         return 4;
     } else {
         return 5;

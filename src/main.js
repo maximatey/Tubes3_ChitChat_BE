@@ -19,7 +19,13 @@ const updateLastModifiesHistory = require('./database.js').updateLastModifiesHis
 function getServices(userInput) {
     // Panggil fungsi classification untuk mengklasifikasi input user
     serviceType = classification(userInput);
+
+    // Preprocessing input user
+    userInput = userInput.toLowerCase();
+    userInput = userInput.replace('?', '');
+    userInput = userInput.trim();
     let userInputArr;
+
     // Panggil fungsi yang sesuai dengan serviceType
     switch (serviceType) {
         case 1:
@@ -34,27 +40,40 @@ function getServices(userInput) {
         case 2:
             // Panggil service kalkulator
             console.log("Kalkulator");
-            console.log(calculator(userInput.replace('?', '')));
+            console.log(calculator(userInput));
             break;
         case 3:
             // Panggil service addQnA
-            userInputArr = userInput.split(' ');
-            addQnA(userInputArr[2], userInputArr[5]);
+            userInput = userInput.replace(' dengan jawaban ', ';');
+            userInput = userInput.replace('tambah pertanyaan', '');
+            userInput = userInput.trim();
+
+            userInputArr = userInput.split(';');
+            addQnA(userInputArr[0], userInputArr[1]);
             console.log("Tambah QnA");
             break;
         case 4:
             // Panggil service deleteQnA
-            userInputArr = userInput.split(' ');
-            deleteQnA(userInputArr[2]);
+            userInput = userInput.replace('hapus pertanyaan', '');
+            deleteQnA(userInput.trim());
             console.log("Hapus QnA");
             break;
         case 5:
             // Panggil service getAnswer
             console.log("Mencari Jawaban");
+            // Dapatkan jawaban dari database
+            getAnswer(userInput).then(function(answers) {
+                if (answers[0] != "") {
+                    console.log(answers[0]);
+                } else {
+                    console.log(answers[2]);
+                }
+            });
             break;
     }
 }
-// getServices("Tambah pertanyaan x dengan jawaban y");
-// getServices("Hapus pertanyaan x");
+// getServices("Tambah pertanyaan apa ibukota inggris? dengan jawaban london");
+// getServices("Hapus pertanyaan apa ibukota italia?");
 // getServices("4+5");
 // getServices("30/04/2023");
+// getServices("apa ibukota indonsa");

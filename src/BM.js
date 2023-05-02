@@ -48,9 +48,9 @@ function searchBM(txt, pat) {
 }
 
 /* Driver program to test above function */
-let txt = "a pattern matching algorithm";
+let txt = "algorithm";
 let pat = "algorithm";
-console.log(searchBM(txt, pat));
+// console.log(searchBM(txt, pat));
 
 // export { searchBM };
 module.exports = { searchBM };
