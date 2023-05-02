@@ -16,9 +16,15 @@ const updateLastModifiesHistory = require('./database.js').updateLastModifiesHis
 
 
 // Fungsi yang handling response terhadap user input di dalam chatbot
-function getServices(userInput) {
+function getServices(userInput, hist_ID) {
     // Panggil fungsi classification untuk mengklasifikasi input user
     serviceType = classification(userInput);
+
+    // Simpan entry chat baru
+    let question_chat = userInput;
+    let answer_chat = null;
+
+
 
     // Preprocessing input user
     userInput = userInput.toLowerCase();
@@ -35,12 +41,14 @@ function getServices(userInput) {
             const day = parseInt(check[0].replace(/[^0-9]/g, ''));
             const month = parseInt(check[1]);
             const year = parseInt(check[2]);
-            console.log(checkDay(day, month, year));
+            answer_chat = checkDay(day, month, year);
+            console.log(answer_chat);
             break;
         case 2:
             // Panggil service kalkulator
             console.log("Kalkulator");
-            console.log(calculator(userInput));
+            answer_chat = calculator(userInput);
+            console.log(answer_chat);
             break;
         case 3:
             // Panggil service addQnA
@@ -49,14 +57,28 @@ function getServices(userInput) {
             userInput = userInput.trim();
 
             userInputArr = userInput.split(';');
-            addQnA(userInputArr[0], userInputArr[1]);
-            console.log("Tambah QnA");
+            addQnA(userInputArr[0], userInputArr[1]).then(function(answer) {
+                answer_chat = answer;
+                console.log(answer_chat);
+                // Tambahkan entry chat baru ke database
+                addChat(question_chat, answer_chat, hist_ID);
+
+                // Perbarui last modified dari history
+                updateLastModifiesHistory(hist_ID);
+            });
             break;
         case 4:
             // Panggil service deleteQnA
             userInput = userInput.replace('hapus pertanyaan', '');
-            deleteQnA(userInput.trim());
-            console.log("Hapus QnA");
+            deleteQnA(userInput.trim()).then(function(answer) {
+                answer_chat = answer;
+                console.log(answer_chat);
+                // Tambahkan entry chat baru ke database
+                addChat(question_chat, answer_chat, hist_ID);
+
+                // Perbarui last modified dari history
+                updateLastModifiesHistory(hist_ID);
+            });
             break;
         case 5:
             // Panggil service getAnswer
@@ -64,16 +86,33 @@ function getServices(userInput) {
             // Dapatkan jawaban dari database
             getAnswer(userInput).then(function(answers) {
                 if (answers[0] != "") {
+                    answer_chat = answers[1];
                     console.log(answers[0]);
                 } else {
+                    answer_chat = answers[2];
                     console.log(answers[2]);
                 }
+
+                // Tambahkan entry chat baru ke database
+                addChat(question_chat, answer_chat, hist_ID);
+
+                // Perbarui last modified dari history
+                updateLastModifiesHistory(hist_ID);
             });
             break;
     }
+
+    // Jika bukan service asycnhronous, jika service asynchronous maka entry chat baru akan dilakukan pada case yang sesuai
+    if (serviceType == 1 || serviceType == 2) {
+        // Tambahkan entry chat baru ke database
+        addChat(question_chat, answer_chat, hist_ID);
+
+        // Perbarui last modified dari history
+        updateLastModifiesHistory(hist_ID);
+    }
 }
-// getServices("Tambah pertanyaan apa ibukota inggris? dengan jawaban london");
-// getServices("Hapus pertanyaan apa ibukota italia?");
-// getServices("4+5");
-// getServices("30/04/2023");
+// getServices("Tambah pertanyaan apa ibukota prancis? dengan jawaban paris", 10000000);
+// getServices("Hapus pertanyaan apa ibukota italia?", 10000000);
+// getServices("4+5", 10000000);
+// getServices("30/04/2023", 10000000);
 // getServices("apa ibukota indonsa");
