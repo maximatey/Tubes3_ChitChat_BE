@@ -1,25 +1,25 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const chatRoute = require('./router/chat')
+const chatRoute = require('./router/chatHistory')
 const con = require('./database').con
 
 // app.get("/", (req, res) => {
 //     res.send('Hello World!');
 // })
 
-const corsOptions = {origin: "http://localhost:5173/"}
+const corsOptions = { origin: "http://localhost:5173/" }
 app.use(express.json())
 app.use(cors(corsOptions))
 
 con.connect((err) => {
     if (err) throw err;
     console.log('Connected to MySQL database!');
-  });
+});
 
 app.use("/chat", chatRoute)
 
-app.listen(5000, () => {console.log("Server started on port 5000")})
+app.listen(5000, () => { console.log("Server started on port 5000") })
 
 const classification = require('./regex.js').classification; // import function classification jika tak terhubung frontend
 const calculator = require('./calculator_feature.js').calculator; // import function calculator jika tak terhubung frontend
@@ -28,8 +28,9 @@ const getAnswer = require('./database.js').getAnswer; // import function getAnsw
 const addQnA = require('./database.js').addQnA; // import function addQnA jika tak terhubung frontend
 const deleteQnA = require('./database.js').deleteQnA; // import function deleteQnA jika tak terhubung frontend
 const addChat = require('./database.js').addChat; // import function addChat jika tak terhubung frontend
+const getHistoryInfo = require('./database.js').getHistoryInfo; // import function getHistoryInfo jika tak terhubung frontend
+const getChats = require('./database.js').getChats; // import function getChats jika tak terhubung frontend
 const addHistory = require('./database.js').addHistory; // import function addHistory jika tak terhubung frontend
-const deleteHistory = require('./database.js').deleteHistory; // import function deleteHistory jika tak terhubung frontend
 const updateLastModifiesHistory = require('./database.js').updateLastModifiesHistory; // import function updateLastModifiesHistory jika tak terhubung frontend
 
 // import { classification } from './regex.js'; // import function classification jika terhubung frontend
@@ -38,7 +39,7 @@ const updateLastModifiesHistory = require('./database.js').updateLastModifiesHis
 // import { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory } from './database.js'; // import function addChat, addHistory, deleteHistory, updateLastModifiesHistory jika terhubung frontend
 
 // Fungsi yang handling response terhadap user input di dalam chatbot
-function getServices(userInput, hist_ID) {
+function getServices(userInput, hist_ID, algorithm) {
     // Panggil fungsi classification untuk mengklasifikasi input user
     serviceType = classification(userInput);
 
@@ -79,7 +80,7 @@ function getServices(userInput, hist_ID) {
             userInput = userInput.trim();
 
             userInputArr = userInput.split(';');
-            addQnA(userInputArr[0], userInputArr[1]).then(function(answer) {
+            addQnA(userInputArr[0], userInputArr[1], algorithm).then(function(answer) {
                 answer_chat = answer;
                 console.log(answer_chat);
                 // Tambahkan entry chat baru ke database
@@ -92,7 +93,7 @@ function getServices(userInput, hist_ID) {
         case 4:
             // Panggil service deleteQnA
             userInput = userInput.replace('hapus pertanyaan', '');
-            deleteQnA(userInput.trim()).then(function(answer) {
+            deleteQnA(userInput.trim(), algorithm).then(function(answer) {
                 answer_chat = answer;
                 console.log(answer_chat);
                 // Tambahkan entry chat baru ke database
@@ -106,7 +107,7 @@ function getServices(userInput, hist_ID) {
             // Panggil service getAnswer
             console.log("Mencari Jawaban");
             // Dapatkan jawaban dari database
-            getAnswer(userInput).then(function(answers) {
+            getAnswer(userInput, algorithm).then(function(answers) {
                 if (answers[0] != "") {
                     answer_chat = answers[1];
                     console.log(answers[0]);
@@ -133,8 +134,42 @@ function getServices(userInput, hist_ID) {
         updateLastModifiesHistory(hist_ID);
     }
 }
+
+// Fungsi untuk mengembalikan semua title dan id dari history yang ada
+function getHistory() {
+    return new Promise(function(resolve, reject) {
+        getHistoryInfo().then(function(history) {
+            resolve(history);
+        })
+    })
+}
+
+// Fungsi untuk mengembalikan semua chat dari history tertentu
+function getChatHistory(hist_ID) {
+    return new Promise(function(resolve, reject) {
+        getChats(hist_ID).then(function(chats) {
+            let logs = [];
+            for (let i = 0; i < chats.length; i++) {
+                logs.push(chats[i].question);
+                logs.push(chats[i].answer);
+            }
+            resolve(logs);
+        })
+    })
+}
+
+// Fungsi untuk menambahkan history baru
+function createNewHistory(title) {
+    addHistory(title)
+}
+
+module.exports = { getServices, getHistory, getChatHistory, createNewHistory };
 // getServices("Tambah pertanyaan apa ibukota prancis? dengan jawaban paris", 10000000);
 // getServices("Hapus pertanyaan apa ibukota italia?", 10000000);
 // getServices("4+5", 10000000);
 // getServices("30/04/2023", 10000000);
 // getServices("apa ibukota indonsa");
+
+// getHistory();
+// getChatHistory(10000000);
+// createNewHistory("History Baru");

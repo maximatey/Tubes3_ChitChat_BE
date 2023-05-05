@@ -32,7 +32,7 @@ function readDatabase(query) {
                 query,
                 function(err, rows) {
                     if (rows === undefined) {
-                        reject(new Error("Error rows is undefined"));
+                        resolve([]);
                     } else {
                         resolve(rows);
                     }
@@ -382,14 +382,23 @@ function updateLastModifiesHistory(hist_ID) {
     modifyDatabase(query, values);
 }
 
+function getHistoryInfo() {
+    return new Promise(function(resolve, reject) {
+        let query = 'SELECT title, hist_ID FROM History';
+        readDatabase(query).then(function(data) {
+            resolve(data);
+        })
+    })
+}
+
+function getChats(hist_ID) {
+    return new Promise(function(resolve, reject) {
+        let query = 'SELECT question, answer FROM Chat';
+        readDatabase(query).then(function(data) {
+            resolve(data);
+        })
+    })
+}
 
 // export { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory }
-module.exports = { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory, con }
-
-// Testing
-// getAnswer("apa kabar?").then(function(answers) {
-//     console.log(answers);
-// });
-
-// addHistory("Ibukota Negara");
-// console.log ()
+module.exports = { getAnswer, addQnA, deleteQnA, addChat, getHistoryInfo, addHistory, updateLastModifiesHistory, getChats }
