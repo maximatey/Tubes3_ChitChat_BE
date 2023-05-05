@@ -11,7 +11,7 @@ const con = require('./database').con
 //     res.send('Hello World!');
 // })
 
-const corsOptions = { origin: "http://127.0.0.1:5173" }
+const corsOptions = { origin: "http://127.0.0.1:5174" }
 app.use(express.json())
 app.use(cors(corsOptions))
 

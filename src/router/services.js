@@ -3,14 +3,18 @@ const router = express.Router()
 const getServices = require('../main').getServices
 
 // Get all users
-router.route('/').get(async(req, res, next) => {
+router.route('/').post(async(req, res, next) => {
     try {
-        getServices(userInput, hist_ID, algorithm);
+        const hist_id = req.body.hist_id;
+        const userInput = req.body.userInput;
+        const algorithm = req.body.algorithm;
+        // Do something with the message and hist_id
+        getServices(userInput, hist_id, algorithm);
         res.send('Services called!');
-    } catch {
-        if (err) throw err;
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
     }
-
 });
 
 module.exports = router;
