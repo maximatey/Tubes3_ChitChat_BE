@@ -401,4 +401,4 @@ function getChats(hist_ID) {
 }
 
 // export { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory }
-module.exports = { getAnswer, addQnA, deleteQnA, addChat, getHistoryInfo, addHistory, updateLastModifiesHistory, getChats }
+module.exports = { getAnswer, addQnA, deleteQnA, addChat, getHistoryInfo, addHistory, updateLastModifiesHistory, getChats, con }

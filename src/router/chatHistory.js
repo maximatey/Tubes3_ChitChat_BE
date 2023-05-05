@@ -5,11 +5,11 @@ const getChatHistory = require('../main').getChatHistory
 // Get all users
 router.route('/').get(async(req, res, next) => {
     try {
-        getChatHistory(hist_id).then((result) => {
-            res.send(result);
-        });
-    } catch {
-        if (err) throw err;
+        const result = await getChatHistory(hist_id);
+        res.send(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
     }
 });
 
