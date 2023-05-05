@@ -386,7 +386,14 @@ function getHistoryInfo() {
     return new Promise(function(resolve, reject) {
         let query = 'SELECT title, hist_ID FROM History';
         readDatabase(query).then(function(data) {
-            resolve(data);
+            let histories = [];
+            for (let i = 0; i < data.length; i++) {
+                let history = [];
+                history.push(data[i].hist_ID);
+                history.push(data[i].title);
+                histories.push(history);
+            }
+            resolve(histories);
         })
     })
 }

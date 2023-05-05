@@ -5,9 +5,9 @@ const getHistory = require('../main').getHistory
 // Get all users
 router.route('/').get(async(req, res, next) => {
     try {
-        getHistory().then((result) => {
-            res.send(result);
-        });
+        const result = await getHistory();
+        res.send(result);
+
     } catch {
         if (err) throw err;
     }

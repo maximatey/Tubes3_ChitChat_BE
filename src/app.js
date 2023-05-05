@@ -2,13 +2,16 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const chatRoute = require('./router/chatHistory')
+const historyRoute = require('./router/history')
+const createHistoryRoute = require('./router/createHistory')
+const servicesRoute = require('./router/services')
 const con = require('./database').con
 
 // app.get("/", (req, res) => {
 //     res.send('Hello World!');
 // })
 
-const corsOptions = { origin: "http://localhost:5173/" }
+const corsOptions = { origin: "http://127.0.0.1:5173" }
 app.use(express.json())
 app.use(cors(corsOptions))
 
@@ -18,5 +21,8 @@ app.use(cors(corsOptions))
 // });
 
 app.use("/chat", chatRoute)
+app.use("/history", historyRoute)
+app.use("/createHistory", createHistoryRoute)
+app.use("/services", servicesRoute)
 
 app.listen(5000, () => { console.log("Server started on port 5000") })
