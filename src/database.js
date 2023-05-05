@@ -10,11 +10,17 @@ const levenshteinDistance = require('./levenshtein_distance.js').levenshteinDist
 
 var mysql = require('mysql');
 var con = mysql.createConnection({
-    host: "localhost",
-    user: "Moore",
-    password: "Moore07",
-    database: "ChitChat"
+    host: "sql12.freesqldatabase.com",
+    user: "sql12615913",
+    password: "Q6v4VUuCTx",
+    database: "sql12615913"
 });
+
+// con.connect((err) => {
+//     if (err) throw err;
+//     console.log('Connected to MySQL database!');
+//   });
+
 
 /*
 Fungsi untuk mengakses databases (read)
@@ -378,7 +384,7 @@ function updateLastModifiesHistory(hist_ID) {
 
 
 // export { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory }
-module.exports = { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory }
+module.exports = { getAnswer, addQnA, deleteQnA, addChat, addHistory, deleteHistory, updateLastModifiesHistory, con }
 
 // Testing
 // getAnswer("apa kabar?").then(function(answers) {
