@@ -6,8 +6,7 @@ const con = require('../database').con
 router.route('/').get(async (req, res, next) => {
     try {
         con.query('SELECT * FROM Chat', (err, results) => {
-            console.log(results);
-            res.send(results);
+            res.json(results);
           });    
     } catch {
         if (err) throw err;
